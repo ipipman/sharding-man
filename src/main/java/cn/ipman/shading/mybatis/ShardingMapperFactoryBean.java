@@ -51,9 +51,10 @@ public class ShardingMapperFactoryBean<T> extends MapperFactoryBean<T> {
             BoundSql boundSql = statement.getBoundSql(args);
             System.out.println(" ===> sql statement: " + boundSql);
 
-            // 选择库,经过sharding后重新生成SQL
+            // 选择库、选择表, 执行sql前, 通过sharding代理进行处理
             Object[] params = getParams(boundSql, args);
             ShardingResult result = engine.sharding(boundSql.getSql(), params);
+            // 知道库和表后, 动态切换库的数据源
             ShardingContext.set(result);
 
             return method.invoke(proxy, args);
@@ -68,10 +69,13 @@ public class ShardingMapperFactoryBean<T> extends MapperFactoryBean<T> {
         if (args.length == 1 && !ClassUtils.isPrimitiveOrWrapper(args[0].getClass())) {
             Object arg = args[0];
 
+            // 从sql里拿到cols, 先获取param名字
             List<String> cols = boundSql.getParameterMappings()
                     .stream().map(ParameterMapping::getProperty).toList();
+
             Object[] values = new Object[cols.size()];
             for (int i = 0; i < cols.size(); i++) {
+                // 通过param从对象反射拿到具体的参数值, 最终转成一个数组
                 Field field = ReflectionUtils.findField(arg.getClass(), cols.get(i));
                 if (field == null) throw new IllegalArgumentException("can not find field " + cols.get(i));
                 field.setAccessible(true);

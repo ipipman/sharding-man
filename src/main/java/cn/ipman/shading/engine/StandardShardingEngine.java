@@ -39,6 +39,7 @@ public class StandardShardingEngine implements ShardingEngine {
 
 
     public StandardShardingEngine(ShardingProperties properties) {
+        // 遍历所有的逻辑表名, 初始化逻辑表和实际库、表对应关系,以及sharding的列和算法策略
         properties.getTables().forEach((table, tableProperties) -> {
             // 实际的库、表名字
             tableProperties.getActualDataNodes().forEach(actualDataNode -> {
@@ -61,10 +62,11 @@ public class StandardShardingEngine implements ShardingEngine {
         SQLStatement sqlStatement = SQLUtils.parseSingleMysqlStatement(sql);
         // 如果是insert语句
         if (sqlStatement instanceof SQLInsertStatement sqlInsertStatement) {
+            // 获取表名
             String table = sqlInsertStatement.getTableName().getSimpleName();
             Map<String, Object> shardingColumnsMap = new HashMap<>();
 
-            // 获取参数列
+            // 匹配参数列、值的对应关系, 最终形成一个Map
             List<SQLExpr> cols = sqlInsertStatement.getColumns();
             for (int i = 0; i < cols.size(); i++) {
                 SQLExpr column = cols.get(i);
@@ -73,13 +75,17 @@ public class StandardShardingEngine implements ShardingEngine {
                 shardingColumnsMap.put(columnNameStr, args[i]);
             }
 
-            // sharding database
+            // 通过sharding选择database
             ShadingStrategy databaseStrategy = datasourceStrategys.get(table);
-            String targetDatabase = databaseStrategy.doSharding(actualDatabaseNames.get(table), table, shardingColumnsMap);
+            // 通过用户sql种的表名,知道实际对应的库名列表
+            List<String> actualDatabases = actualDatabaseNames.get(table);
+            String targetDatabase = databaseStrategy.doSharding(actualDatabases, table, shardingColumnsMap);
 
-            // sharding table
+            // 通过sharding选择table
             ShadingStrategy tableStrategy = tableStrategys.get(table);
-            String targetTable = tableStrategy.doSharding(actualTableNames.get(table), table, shardingColumnsMap);
+            // 通过用户sql种的表名,知道实际对应的表名列表
+            List<String> actualTables = actualTableNames.get(table);
+            String targetTable = tableStrategy.doSharding(actualTables, table, shardingColumnsMap);
             System.out.println(" ====>>>> target db.table = " + targetDatabase + "." + targetTable);
 
 

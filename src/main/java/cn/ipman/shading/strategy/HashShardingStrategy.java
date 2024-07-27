@@ -14,7 +14,10 @@ import java.util.Properties;
  */
 public class HashShardingStrategy implements ShadingStrategy {
 
+    // 需要Sharding的列
     final String shardingColumn;
+
+    // Sharding的Hash算法表达式
     final String algorithmExpression;
 
     public HashShardingStrategy(Properties properties) {
@@ -28,12 +31,14 @@ public class HashShardingStrategy implements ShadingStrategy {
     }
 
     @Override
-    public String doSharding(List<String> availableTargetNames, String logicTableName, Map<String, Object> shardingParams) {
-        // 先转换下表达式,避免错误,再进行解析
+    public String doSharding(List<String> availableTargetNames,
+                             String logicTableName, Map<String, Object> shardingParams) {
+
+        // 先纠正Hash算法表达式,避免错误
         String expression = InlineExpressionParser.handlePlaceHolder(algorithmExpression);
         InlineExpressionParser parser = new InlineExpressionParser(expression);
 
-        // 根据params的分片参数和分片表达式, 计算Hash值
+        // 根据params的分片key和分片表达式进行计算Hash值
         Closure<?> closure = parser.evaluateClosure();
         closure.setProperty(this.shardingColumn, shardingParams.get(this.shardingColumn));
         return closure.call().toString();
