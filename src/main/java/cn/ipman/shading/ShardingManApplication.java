@@ -25,12 +25,15 @@ public class ShardingManApplication {
     @Bean
     ApplicationRunner applicationRunner() {
         return x -> {
+
+            int id = 2;
+
             System.out.println(" ====> 1. test insert ...");
-            int inserted = userMapper.insert(new User(1, "ipman", 18));
+            int inserted = userMapper.insert(new User(id, "ipman", 18));
             System.out.println(" ====> 1. test insert = " + inserted);
 
             System.out.println(" ====> 2. test find ....");
-            User user = userMapper.findById(1);
+            User user = userMapper.findById(id);
             System.out.println(" ====> find = " + user);
 
             System.out.println(" ====> 3. test update ...");
@@ -39,11 +42,11 @@ public class ShardingManApplication {
             System.out.println(" ====> updated = " + updated);
 
             System.out.println(" ====> 4. test find ....");
-            User user2 = userMapper.findById(1);
+            User user2 = userMapper.findById(id);
             System.out.println(" ====> find = " + user2);
 
             System.out.println(" ====> 4. test delete ....");
-            int deleted = userMapper.delete(1);
+            int deleted = userMapper.delete(id);
             System.out.println(" ====> deleted = " + deleted);
 
         };
