@@ -32,6 +32,8 @@ public class ShardingDataSource extends AbstractRoutingDataSource {
     @Override
     protected Object determineCurrentLookupKey() {
         ShardingResult shardingResult = ShardingContext.get();
-        return shardingResult == null ? null : shardingResult.getTargetDataSourceName();
+        Object key = shardingResult == null ? null : shardingResult.getTargetDataSourceName();
+        System.out.println(" ===>> determineCurrentLookupKey: " + key);
+        return key;
     }
 }
