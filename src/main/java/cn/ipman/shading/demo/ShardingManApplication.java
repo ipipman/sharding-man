@@ -1,7 +1,9 @@
-package cn.ipman.shading;
+package cn.ipman.shading.demo;
 
-import cn.ipman.shading.demo.User;
-import cn.ipman.shading.demo.UserMapper;
+import cn.ipman.shading.config.ShardingAutoConfiguration;
+import cn.ipman.shading.mybatis.ShardingMapperFactoryBean;
+import cn.ipman.shading.demo.mapper.UserMapper;
+import cn.ipman.shading.demo.model.User;
 import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.ApplicationRunner;
@@ -12,7 +14,7 @@ import org.springframework.context.annotation.Import;
 
 @SpringBootApplication
 @Import(ShardingAutoConfiguration.class)
-@MapperScan(value = "cn.ipman.shading.demo", factoryBean = ShardingMapperFactoryBean.class)
+@MapperScan(value = "cn.ipman.shading.demo.mapper", factoryBean = ShardingMapperFactoryBean.class)
 public class ShardingManApplication {
 
     public static void main(String[] args) {
@@ -34,6 +36,11 @@ public class ShardingManApplication {
 
     private void test(int id) {
 
+        System.out.println("=============================");
+        System.out.println("=========== ID " + id + " ============");
+        System.out.println("=============================");
+
+
         System.out.println(" ====> 1. test insert ...");
         int inserted = userMapper.insert(new User(id, "ipman", 18));
         System.out.println(" ====> 1. test insert = " + inserted);
@@ -51,9 +58,9 @@ public class ShardingManApplication {
         User user2 = userMapper.findById(id);
         System.out.println(" ====> find = " + user2);
 
-//        System.out.println(" ====> 4. test delete ....");
-//        int deleted = userMapper.delete(id);
-//        System.out.println(" ====> deleted = " + deleted);
+        System.out.println(" ====> 4. test delete ....");
+        int deleted = userMapper.delete(id);
+        System.out.println(" ====> deleted = " + deleted);
     }
 
 }

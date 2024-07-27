@@ -1,5 +1,6 @@
-package cn.ipman.shading.demo;
+package cn.ipman.shading.demo.mapper;
 
+import cn.ipman.shading.demo.model.User;
 import org.apache.ibatis.annotations.*;
 
 @Mapper

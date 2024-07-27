@@ -1,7 +1,8 @@
-package cn.ipman.shading;
+package cn.ipman.shading.mybatis;
 
-import cn.ipman.shading.demo.User;
-import org.apache.ibatis.executor.statement.StatementHandler;
+import cn.ipman.shading.engine.ShardingContext;
+import cn.ipman.shading.engine.ShardingResult;
+import cn.ipman.shading.demo.model.User;
 import org.apache.ibatis.mapping.BoundSql;
 import org.apache.ibatis.mapping.MappedStatement;
 import org.apache.ibatis.session.Configuration;

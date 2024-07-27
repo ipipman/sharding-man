@@ -1,5 +1,6 @@
-package cn.ipman.shading;
+package cn.ipman.shading.config;
 
+import cn.ipman.shading.datasource.ShardingDataSource;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

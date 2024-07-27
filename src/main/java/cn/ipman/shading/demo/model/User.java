@@ -1,4 +1,4 @@
-package cn.ipman.shading.demo;
+package cn.ipman.shading.demo.model;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

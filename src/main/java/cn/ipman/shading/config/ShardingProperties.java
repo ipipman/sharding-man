@@ -1,4 +1,4 @@
-package cn.ipman.shading;
+package cn.ipman.shading.config;
 
 import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;

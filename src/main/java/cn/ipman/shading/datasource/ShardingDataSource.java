@@ -1,5 +1,8 @@
-package cn.ipman.shading;
+package cn.ipman.shading.datasource;
 
+import cn.ipman.shading.engine.ShardingContext;
+import cn.ipman.shading.engine.ShardingResult;
+import cn.ipman.shading.config.ShardingProperties;
 import com.alibaba.druid.pool.DruidDataSourceFactory;
 import org.springframework.jdbc.datasource.lookup.AbstractRoutingDataSource;
 

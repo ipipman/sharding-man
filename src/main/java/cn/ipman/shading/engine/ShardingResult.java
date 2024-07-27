@@ -1,4 +1,4 @@
-package cn.ipman.shading;
+package cn.ipman.shading.engine;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
