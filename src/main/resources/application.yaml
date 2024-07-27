@@ -1,7 +1,14 @@
 spring:
   application:
     name: shading-man
-  datasource:
-    url: jdbc:mysql://127.0.0.1:3306/db0?useUnicode=true&characterEncoding=utf-8&useSSL=false&serverTimezone=Asia/Shanghai
-    username: root
-    password:
+
+  sharding:
+    dataSources:
+      ds0:
+        url: jdbc:mysql://127.0.0.1:3306/db0?useUnicode=true&characterEncoding=utf-8&useSSL=false&serverTimezone=Asia/Shanghai
+        username: root
+        password: Hys.103.103
+      ds1:
+        url: jdbc:mysql://127.0.0.1:3306/db1?useUnicode=true&characterEncoding=utf-8&useSSL=false&serverTimezone=Asia/Shanghai
+        username: root
+        password: Hys.103.103
