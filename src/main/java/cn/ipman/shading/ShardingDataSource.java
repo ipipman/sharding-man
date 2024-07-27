@@ -26,7 +26,7 @@ public class ShardingDataSource extends AbstractRoutingDataSource {
         });
         // 设置目标数据源
         setTargetDataSources(dataSourcesMap);
-        setDefaultTargetDataSource(dataSourcesMap.keySet().iterator().next());
+        setDefaultTargetDataSource(dataSourcesMap.values().iterator().next());
     }
 
     @Override

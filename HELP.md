@@ -2,8 +2,12 @@
 #### 初始化SQL
 
 ```sql
-CREATE DATABASE db0;
+CREATE DATABASE ds0;
+       
+CREATE DATABASE ds1;
 
+-- 分别创建如下:       
+       
 CREATE TABLE `user` (
     `id` int(11) NOT NULL AUTO_INCREMENT,
     `name` varchar(32) NOT NULL,
