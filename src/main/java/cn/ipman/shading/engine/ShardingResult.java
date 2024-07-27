@@ -16,5 +16,8 @@ import lombok.NoArgsConstructor;
 public class ShardingResult {
 
     private String targetDataSourceName;
+    private String targetSqlStatement;
+
+
 
 }

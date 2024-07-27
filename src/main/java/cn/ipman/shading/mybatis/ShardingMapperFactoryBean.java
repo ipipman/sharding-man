@@ -1,8 +1,10 @@
 package cn.ipman.shading.mybatis;
 
 import cn.ipman.shading.engine.ShardingContext;
+import cn.ipman.shading.engine.ShardingEngine;
 import cn.ipman.shading.engine.ShardingResult;
 import cn.ipman.shading.demo.model.User;
+import lombok.Setter;
 import org.apache.ibatis.mapping.BoundSql;
 import org.apache.ibatis.mapping.MappedStatement;
 import org.apache.ibatis.session.Configuration;
@@ -18,6 +20,9 @@ import java.lang.reflect.Proxy;
  * @Date 2024/7/27 18:53
  */
 public class ShardingMapperFactoryBean<T> extends MapperFactoryBean<T> {
+
+    @Setter
+    ShardingEngine engine;
 
     public ShardingMapperFactoryBean() {
     }
@@ -37,15 +42,14 @@ public class ShardingMapperFactoryBean<T> extends MapperFactoryBean<T> {
         return (T) Proxy.newProxyInstance(clazz.getClassLoader(), new Class[]{clazz}, (p, method, args) -> {
             String mapperId = clazz.getName() + "." + method.getName();
             MappedStatement statement = configuration.getMappedStatement(mapperId);
+
             BoundSql boundSql = statement.getBoundSql(args);
             System.out.println(" ===> sql statement: " + boundSql);
 
-            Object parameterObject = args[0];
-            if (parameterObject instanceof User user) {
-                ShardingContext.set(new ShardingResult(user.getId() % 2 == 0 ? "ds0" : "ds1"));
-            } else if (parameterObject instanceof Integer id) {
-                ShardingContext.set(new ShardingResult(id % 2 == 0 ? "ds0" : "ds1"));
-            }
+            // 选择库
+            ShardingResult result = engine.sharding(boundSql.getSql(), args);
+            ShardingContext.set(result);
+
             return method.invoke(proxy, args);
         });
 
