@@ -19,23 +19,39 @@ import java.lang.reflect.Proxy;
 import java.util.List;
 
 /**
- * Factory bean for mapper.
+ * 为分库分表的MyBatis映射器提供工厂bean。
+ * 该类继承自{@link MapperFactoryBean}，并添加了分库分表的逻辑。
  *
- * @Author IpMan
- * @Date 2024/7/27 18:53
+ * @param <T> 映射器接口的类型。
  */
 public class ShardingMapperFactoryBean<T> extends MapperFactoryBean<T> {
 
+    /**
+     * 分库分表引擎。
+     * 用于根据业务逻辑将SQL路由到正确的数据库和表。
+     */
     @Setter
     ShardingEngine engine;
 
     public ShardingMapperFactoryBean() {
     }
 
+    /**
+     * 构造函数，指定映射器接口类。
+     *
+     * @param mapperInterface 映射器接口类。
+     */
     public ShardingMapperFactoryBean(Class<T> mapperInterface) {
         super(mapperInterface);
     }
 
+    /**
+     * 获取映射器实例。
+     * 该方法重写了父类方法，用于创建带有分库分表逻辑的映射器代理。
+     *
+     * @return 映射器代理实例。
+     * @throws Exception 如果创建映射器代理出现异常。
+     */
     @Override
     @SuppressWarnings("unchecked")
     public T getObject() throws Exception {
@@ -62,6 +78,16 @@ public class ShardingMapperFactoryBean<T> extends MapperFactoryBean<T> {
 
     }
 
+    /**
+     * 获取参数数组。
+     * 如果参数是复杂对象，该方法会将其属性值提取出来作为SQL的参数。
+     * 这样做是为了支持根据对象的属性进行分库分表。
+     *
+     * @param boundSql SQL的绑定对象，包含SQL信息和参数信息。
+     * @param args 方法的参数数组。
+     * @return 处理后的参数数组。
+     * @throws IllegalArgumentException 如果找不到字段对应的反射方法。
+     */
     @SneakyThrows
     private static Object[] getParams(BoundSql boundSql, Object[] args) {
         Object[] params = args;
