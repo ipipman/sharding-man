@@ -24,13 +24,14 @@ import java.util.List;
  *
  * @param <T> 映射器接口的类型。
  */
+@Setter
 public class ShardingMapperFactoryBean<T> extends MapperFactoryBean<T> {
 
     /**
      * 分库分表引擎。
      * 用于根据业务逻辑将SQL路由到正确的数据库和表。
+     * 由Spring自动注入Bean
      */
-    @Setter
     ShardingEngine engine;
 
     public ShardingMapperFactoryBean() {
