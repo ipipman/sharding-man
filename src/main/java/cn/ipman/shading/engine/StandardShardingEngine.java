@@ -117,7 +117,6 @@ public class StandardShardingEngine implements ShardingEngine {
 
         }
 
-
         // 根据分库策略选择目标数据库
         ShadingStrategy databaseStrategy = datasourceStrategys.get(table);
         // 通过用户sql种的表名,知道实际对应的库名列表

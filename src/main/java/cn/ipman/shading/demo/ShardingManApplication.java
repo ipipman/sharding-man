@@ -39,10 +39,19 @@ public class ShardingManApplication {
     @Bean
     ApplicationRunner applicationRunner() {
         return x -> {
-            for (int i = 1; i <= 1; i++) {
+            for (int i = 1; i <= 30; i++) {
                 test(i);
             }
         };
+
+//        String test = """
+//        select * from (
+//                select * from ds0.user0 union select * from ds0.user1 union select * from ds0.user2
+//                union
+//                select * from ds1.user0 union select * from ds1.user1 union select * from ds1.user2
+//        ) as user_all
+//        order by  user_all.id asc;
+//        """;
     }
 
 
@@ -79,10 +88,10 @@ public class ShardingManApplication {
         User user2 = userMapper.findById(id);
         System.out.println(" ====> find = " + user2);
 
-        // 测试删除用户
-        System.out.println(" ====> 4. test delete ....");
-        int deleted = userMapper.delete(id);
-        System.out.println(" ====> deleted = " + deleted);
+//        // 测试删除用户
+//        System.out.println(" ====> 4. test delete ....");
+//        int deleted = userMapper.delete(id);
+//        System.out.println(" ====> deleted = " + deleted);
     }
 
 }
