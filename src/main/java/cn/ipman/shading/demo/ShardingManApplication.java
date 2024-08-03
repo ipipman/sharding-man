@@ -1,6 +1,8 @@
 package cn.ipman.shading.demo;
 
 import cn.ipman.shading.config.ShardingAutoConfiguration;
+import cn.ipman.shading.demo.mapper.OrderMapper;
+import cn.ipman.shading.demo.model.Order;
 import cn.ipman.shading.mybatis.ShardingMapperFactoryBean;
 import cn.ipman.shading.demo.mapper.UserMapper;
 import cn.ipman.shading.demo.model.User;
@@ -30,6 +32,10 @@ public class ShardingManApplication {
     @Autowired
     UserMapper userMapper;
 
+    @Autowired
+    OrderMapper orderMapper;
+
+
     /**
      * 定义应用启动后执行的逻辑。
      * 使用ApplicationRunner接口，在应用启动后插入、查询、更新和删除用户信息进行测试。
@@ -39,59 +45,88 @@ public class ShardingManApplication {
     @Bean
     ApplicationRunner applicationRunner() {
         return x -> {
-            for (int i = 1; i <= 30; i++) {
-                test(i);
+            System.out.println(" ===> ===> ===> ===> ===> ===>...");
+            System.out.println(" ===>   test user mapper  ===> ...");
+            System.out.println(" ===> ===> ===> ===> ===> ===>...");
+            for (int id = 1; id <= 10; id++) {
+                testUserMapper(id);
             }
-        };
+            System.out.println(" ===> ===> ===> ===> ===> ===>...");
+            System.out.println(" ===> ===> ===> ===> ===> ===>...");
+            System.out.println(" ===> ===> ===> ===> ===> ===>...");
 
-//        String test = """
-//        select * from (
-//                select * from ds0.user0 union select * from ds0.user1 union select * from ds0.user2
-//                union
-//                select * from ds1.user0 union select * from ds1.user1 union select * from ds1.user2
-//        ) as user_all
-//        order by  user_all.id asc;
-//        """;
+            System.out.println(" ===> ===> ===> ===> ===> ===>...");
+            System.out.println(" ===>  test order mapper  ===> ...");
+            System.out.println(" ===> ===> ===> ===> ===> ===>...");
+            for (int id = 1; id <= 10; id++) {
+                testOrderMapper(id);
+            }
+            System.out.println(" ===> ===> ===> ===> ===> ===>...");
+            System.out.println(" ===> ===> ===> ===> ===> ===>...");
+            System.out.println(" ===> ===> ===> ===> ===> ===>...");
+        };
     }
 
 
-    /**
-     * 测试用户数据操作：插入、查询、更新和删除。
-     * 该方法模拟了对单个用户进行CRUD操作的流程。
-     *
-     * @param id 用户ID，用于操作特定用户。
-     */
-    private void test(int id) {
+    private void testUserMapper(int id) {
+        System.out.println("\n ===> ===> ===>  id = " + id + "===> ===> ===>\n");
+        System.out.println(" ===> 1. test insert ...");
+        int inserted = userMapper.insert(new User(id, "vipman", 20));
+        System.out.println(" ===> inserted = " + inserted);
 
-        System.out.println("=============================");
-        System.out.println("=========== ID " + id + " ============");
-        System.out.println("=============================");
-
-        // 测试插入用户
-        System.out.println(" ====> 1. test insert ...");
-        int inserted = userMapper.insert(new User(id, "ipman", 18));
-        System.out.println(" ====> 1. test insert = " + inserted);
-
-        // 测试查询用户
-        System.out.println(" ====> 2. test find ....");
+        System.out.println(" ===> 2. test find ...");
         User user = userMapper.findById(id);
-        System.out.println(" ====> find = " + user);
+        System.out.println(" ===> find = " + user);
 
-        // 测试更新用户
-        System.out.println(" ====> 3. test update ...");
-        user.setName("IP-MAN");
+        System.out.println(" ===> 3. test update ...");
+        user.setName("ipman");
         int updated = userMapper.update(user);
-        System.out.println(" ====> updated = " + updated);
+        System.out.println(" ===> updated = " + updated);
 
-        // 再次查询用户，验证更新结果
-        System.out.println(" ====> 4. test find ....");
+        System.out.println(" ===> 4. test new find ...");
         User user2 = userMapper.findById(id);
-        System.out.println(" ====> find = " + user2);
+        System.out.println(" ===> find = " + user2);
 
-//        // 测试删除用户
-//        System.out.println(" ====> 4. test delete ....");
-//        int deleted = userMapper.delete(id);
-//        System.out.println(" ====> deleted = " + deleted);
+        System.out.println(" ===> 5. test delete ...");
+        int deleted = userMapper.delete(id);
+        System.out.println(" ===> deleted = " + deleted);
+    }
+
+    private void testOrderMapper(int id) {
+
+        System.out.println("\n ===> ===> ===>  id = " + id + "===> ===> ===>\n");
+        System.out.println(" ===> 1. test insert ...");
+        int id2 = id + 100;
+        int inserted = orderMapper.insert(new Order(id, 1, 10d));
+        System.out.println(" ===> inserted = " + inserted);
+        inserted = orderMapper.insert(new Order(id2, 2, 20d));
+        System.out.println(" ===> inserted = " + inserted);
+
+        System.out.println(" ===> 2. test find ...");
+        Order order1 = orderMapper.findById(id, 1);
+        System.out.println(" ===> find = " + order1);
+        Order order2 = orderMapper.findById(id2, 2);
+        System.out.println(" ===> find = " + order2);
+
+        System.out.println(" ===> 3. test update ...");
+        order1.setPrice(11d);
+        int updated = orderMapper.update(order1);
+        System.out.println(" ===> updated = " + updated);
+        order2.setPrice(22d);
+        updated = orderMapper.update(order2);
+        System.out.println(" ===> updated = " + updated);
+
+        System.out.println(" ===> 4. test new find ...");
+        Order order11 = orderMapper.findById(id, 1);
+        System.out.println(" ===> find = " + order11);
+        Order order22 = orderMapper.findById(id2, 2);
+        System.out.println(" ===> find = " + order22);
+
+        System.out.println(" ===> 5. test delete ...");
+        int deleted = orderMapper.delete(id, 1);
+        System.out.println(" ===> deleted = " + deleted);
+        deleted = orderMapper.delete(id2, 2);
+        System.out.println(" ===> deleted = " + deleted);
     }
 
 }
