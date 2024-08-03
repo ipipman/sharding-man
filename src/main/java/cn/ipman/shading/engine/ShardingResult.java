@@ -26,4 +26,9 @@ public class ShardingResult {
      */
     private String targetSqlStatement;
 
+    /**
+     * SQL参数
+     */
+    private Object[] parameters;
+
 }

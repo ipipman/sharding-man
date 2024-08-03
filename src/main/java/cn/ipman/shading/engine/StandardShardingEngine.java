@@ -77,10 +77,11 @@ public class StandardShardingEngine implements ShardingEngine {
      */
     @Override
     public ShardingResult sharding(String sql, Object[] args) {
-        // 解析SQL语句
+        // 通过Druid解析SQL语句
         SQLStatement sqlStatement = SQLUtils.parseSingleMysqlStatement(sql);
-
+        // 逻辑表
         String table;
+        // SQL参数
         Map<String , Object> shardingColumnsMap;
 
         // insert
@@ -109,8 +110,11 @@ public class StandardShardingEngine implements ShardingEngine {
                 throw new RuntimeException("not support multi tables sharding: " + sqlName);
             }
 
+            // 获取目标表名
             table = sqlName.iterator().next().getSimpleName();
             System.out.println(" ====>>> visitor.getOriginalTables " + table);
+
+            // 获取sql参数
             shardingColumnsMap = visitor.getConditions().stream()
                     .collect(Collectors.toMap(c -> c.getColumn().getName(), c -> c.getValues().get(0)));
             System.out.println(" ====>>> visitor.getShardingColumnsMap " + shardingColumnsMap);
@@ -133,6 +137,12 @@ public class StandardShardingEngine implements ShardingEngine {
         System.out.println(" ====>>>> target db.table = " + targetDatabase + "." + targetTable);
         System.out.println(" ====>>>> ");
 
-        return new ShardingResult(targetDatabase, sql.replace(table, targetTable));
+        // sharding后的结果, 实际库、实际表、以及参数
+        ShardingResult shardingResult = new ShardingResult();
+        shardingResult.setTargetDataSourceName(targetDatabase);
+        shardingResult.setTargetSqlStatement(sql.replace(table, targetTable));
+        shardingResult.setParameters(args);
+
+        return shardingResult;
     }
 }
