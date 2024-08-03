@@ -9,7 +9,7 @@ public interface UserMapper {
     @Insert("insert into user (id, name, age) values (#{id}, #{name}, #{age})")
     int insert(User user);
 
-    @Select("select * from user where id = #{id, jdbcType=INTEGER}")
+    @Select("select * from user where id = #{id, jdbcType=INTEGER} and name = 'ipman' ")
     User findById(int id);
 
     @Update("update user set name = #{name}, age = #{age} where id = #{id}")
