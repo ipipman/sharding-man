@@ -5,12 +5,12 @@
     <parent>
         <groupId>io.github.ipipman</groupId>
         <artifactId>sharding-man</artifactId>
-        <version>0.0.1-SNAPSHOT</version>
+        <version>${sharding.version}</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
 
     <artifactId>sharding-core</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
+    <version>${sharding.version}</version>
     <name>sharding-core</name>
     <description>sharding-core</description>
 
